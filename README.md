@@ -1194,3 +1194,8 @@ Note right of C: 没人陪我玩
 1. Markdown是一种纯文本标记语言 [↩](https://github.com/deeround/Typora-Markdown-Docment#user-content-fnref-1-1d259bb2363758f28b58995c6be3abc8)
 2. HyperText Markup Language 超文本标记语言 [↩](https://github.com/deeround/Typora-Markdown-Docment#user-content-fnref-2-1d259bb2363758f28b58995c6be3abc8)
 3. 开源笔记平台，支持Markdown和笔记直接发为博文 [↩](https://github.com/deeround/Typora-Markdown-Docment#user-content-fnref-Le-1d259bb2363758f28b58995c6be3abc8)
+
+# Markdown参考2
+
+[Markdown语法大全(个人总结版 for Typora)](https://kimtanyo.github.io/post/markdown-yu-fa-da-quan/)
+
