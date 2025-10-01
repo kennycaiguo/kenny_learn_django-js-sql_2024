@@ -1,0 +1,16 @@
+table{
+            border-collapse: collapse;
+            width: 600px;
+            margin: 20px auto;
+        }
+        td,th{
+            border:1px solid #ccc;
+            padding: 8px 5px;
+            text-align: center;
+        }
+
+        div{
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
