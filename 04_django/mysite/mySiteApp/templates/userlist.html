@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +7,13 @@
     <style>
 
     </style>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-<table>
+
+<div class="box">
+    <table>
     <caption>
         <h1> 用户列表</h1>
     </caption>
@@ -37,10 +41,12 @@
     </tbody>
 
 </table>
-<div>
-    <img src="/static/scene1.png" alt="风景图片">
+    <img src="{% static 'img/1.jpg' %}" alt="美女图片">
 </div>
-<script src="/static/js/utils.js"></script>
+{#<script src="/static/js/utils.js"></script>#}
+<script src="{% static 'js/jquery3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 <script>
 
 let max = getMax(1,2,30,4,50)
