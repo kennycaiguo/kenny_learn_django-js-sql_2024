@@ -31,4 +31,6 @@ urlpatterns = [
     path('userlist/', views.user_list),
     path('tpl/', views.tpl),
     path('movies/', views.movies),
+    path('req_test/', views.reqTest),
+    path('login/', views.login),
 ] + static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
 
@@ -79,4 +79,31 @@ def movies(req):
     # print(chinese_titles)
     movies = dict(zip(chinese_titles, summ))
     print(movies)
-    return render(req, "movies.html",{"movies":movies})
+    return render(req, "movies.html", {"movies": movies})
+
+
+def reqTest(req):
+    print(req)
+    # 获取请求方式
+    print(req.method)
+    print(req.body) # post请求发送过来的数据 # 这里是空,因为这是get请求
+    print(req.user) # AnonymousUser
+    print(req.headers)
+    print(req.session)
+    print(req.path)
+    print(req.META)
+    print(req.GET) #可以获取get请求参数
+    print(req.POST) #可以获取post请求数据
+
+    # return HttpResponse("服务器返回的数据")
+    return redirect("/userlist")
+
+
+
+def login(req):
+    if req.method=="GET":
+        return render(req,"login.html")
+    else:
+        # post请求,需要获取用户信息
+        print(req.POST)
+        return HttpResponse("登录成功")

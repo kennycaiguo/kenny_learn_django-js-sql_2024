@@ -2,6 +2,13 @@
 学习django和vue项目开发
 
 这里我们使用typora来做笔记,所以有必要了解一下markdwon的语法和typora快捷键
+## 一些django项目源码
+1.高仿慕课网：py3.5 + Django1.10 + xadmin 搭建的在线课程教育平台
+https://github.com/kele59/imooc-django  <br>
+2.基于 Flask 框架开发的微信小程序后端项目，用于构建小程序商城后台 （电商相关)
+https://github.com/Allen7D/mini-shop-server
+
+
 
 ## 常用快捷键
 
