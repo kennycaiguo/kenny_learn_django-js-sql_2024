@@ -103,7 +103,12 @@ def reqTest(req):
 def login(req):
     if req.method=="GET":
         return render(req,"login.html")
-    else:
-        # post请求,需要获取用户信息
-        print(req.POST)
-        return HttpResponse("登录成功")
+    # post请求,需要获取用户信息
+    print(req.POST)
+    # 数据校验
+    user = req.POST.get("username")
+    pwd = req.POST.get("password")
+    if user == "root" and pwd == "root":
+        # return HttpResponse("登录成功")
+        return redirect("/index/")
+    return render(req,"login.html",{"error":"用户名或者密码错误"})
