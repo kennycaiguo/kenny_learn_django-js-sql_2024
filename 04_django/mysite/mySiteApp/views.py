@@ -1,5 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from mySiteApp import models
 
 
 # Create your views here.
@@ -86,23 +87,22 @@ def reqTest(req):
     print(req)
     # 获取请求方式
     print(req.method)
-    print(req.body) # post请求发送过来的数据 # 这里是空,因为这是get请求
-    print(req.user) # AnonymousUser
+    print(req.body)  # post请求发送过来的数据 # 这里是空,因为这是get请求
+    print(req.user)  # AnonymousUser
     print(req.headers)
     print(req.session)
     print(req.path)
     print(req.META)
-    print(req.GET) #可以获取get请求参数
-    print(req.POST) #可以获取post请求数据
+    print(req.GET)  # 可以获取get请求参数
+    print(req.POST)  # 可以获取post请求数据
 
     # return HttpResponse("服务器返回的数据")
     return redirect("/userlist")
 
 
-
 def login(req):
-    if req.method=="GET":
-        return render(req,"login.html")
+    if req.method == "GET":
+        return render(req, "login.html")
     # post请求,需要获取用户信息
     print(req.POST)
     # 数据校验
@@ -111,4 +111,44 @@ def login(req):
     if user == "root" and pwd == "root":
         # return HttpResponse("登录成功")
         return redirect("/index/")
-    return render(req,"login.html",{"error":"用户名或者密码错误"})
+    return render(req, "login.html", {"error": "用户名或者密码错误"})
+
+
+def orm(req):
+    """1.新增"""
+    # models.Department.objects.create(title="销售部")
+    # models.Department.objects.create(title="IT部")
+    # models.Department.objects.create(title="运营部")
+
+    # 用户信息表
+    # models.UserInfo.objects.create(name="Jack",password="1234",age=18)
+    # models.UserInfo.objects.create(name="Kitty",password="123",age=19)
+    # models.UserInfo.objects.create(name="Mimi",password="234",age=17)
+
+    """2.删除"""
+    # 删除数据,需要先筛选数据,选出来后再删除
+    # models.UserInfo.objects.filter(id=3).delete() # 删除id为3的一行数据
+    # models.Department.objects.all().delete() # 删除部门表的全部数据
+
+    """3.查询(筛选)"""
+    # 3.1查询所有,返回一个QuerySet,是一个列表一样的东西,可以遍历
+    # for item in models.UserInfo.objects.all():
+    #     print(item.id,item.name,item.password,item.age)
+    # 3.2查询一条数据
+    # data = models.UserInfo.objects.filter(id=1) #即使只有一条数据,它还是一个列表
+    # for user in data:
+    #     print(user.id,user.name,user.password,user.age)
+    # 3.3 如果你非常确定只有一条数据,你可以这么写
+    # user = models.UserInfo.objects.filter(id=1).first()
+    # print(user.id,user.name,user.password,user.age)
+    """4.更新数据"""
+    # 4.1更新所有数据
+    # models.UserInfo.objects.all().update(password="888")
+    # 4.2更新某一些或者某一个数据
+    models.UserInfo.objects.filter(id=2).update(password="6666")
+    return HttpResponse("操作成功")
+
+
+def showAll(req):
+    users = models.UserInfo.objects.all()
+    return render(req, "all.html", {'users': users})

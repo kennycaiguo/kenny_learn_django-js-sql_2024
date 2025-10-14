@@ -33,4 +33,6 @@ urlpatterns = [
     path('movies/', views.movies),
     path('req_test/', views.reqTest),
     path('login/', views.login),
+    path('orm/', views.orm),
+    path('users/', views.showAll),
 ] + static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
