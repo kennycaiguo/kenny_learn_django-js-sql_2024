@@ -152,3 +152,23 @@ def orm(req):
 def showAll(req):
     users = models.UserInfo.objects.all()
     return render(req, "all.html", {'users': users})
+
+
+def addNew(req):
+    if req.method == "GET":
+        return render(req, "add_new.html")
+    # post请求
+    # username = req.POST.get("")
+    # print(req.POST)
+    username = req.POST.get("username")
+    password = req.POST.get("password")
+    age = req.POST.get("age")
+    models.UserInfo.objects.create(name=username, password=password, age=age)
+    # return HttpResponse("添加新用户成功")
+    return redirect("/info/list")
+
+def deleteOne(req):
+    nid = req.GET.get("nid")
+    models.UserInfo.objects.filter(id=nid).delete()
+    # 重定向到/info/list
+    return redirect("/info/list")
