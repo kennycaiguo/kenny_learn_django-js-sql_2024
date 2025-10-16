@@ -16,7 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from day16 import settings
+from day16app import views
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+    # path('admin/', admin.site.urls),
+    path('', views.home),
+    path('index/', views.index),
+    path('dep/list/', views.dep_list),
+    path('dep/add/', views.dep_add),
+    path('dep/del/', views.dep_del),
+    # path('dep/edit/', views.dep_edit),
+    # 路由格式 :http://127.0.0.1:8000/dep/1/edit
+    path('dep/<int:nid>/edit/', views.dep_edit),
+]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
