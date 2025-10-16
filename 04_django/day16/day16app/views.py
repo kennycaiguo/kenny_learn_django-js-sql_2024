@@ -57,7 +57,7 @@ def dep_edit(req,nid):
         dep = Department.objects.filter(id=nid).first()
         return render(req, "dep_edit.html", {"dep": dep})
     # 处理post
-    id = req.POST.get("id")
+    # id T= req.POS.get("id")  # 在模板里面没有使用hidden字段,这里就不需要这一句
     title = req.POST.get("title")
-    Department.objects.filter(id=id).update(title=title)
+    Department.objects.filter(id=nid).update(title=title)
     return redirect("/dep/list")
