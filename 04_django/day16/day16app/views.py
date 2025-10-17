@@ -94,22 +94,27 @@ def user_list(req):
 # 使用django ModelForm组件的写法
 # 1.定义一个表单类继承自forms.ModelForm
 class MyForm(forms.ModelForm):
+    name = forms.CharField(min_length=2,label="姓名")  # 设置姓名的最小长度
+
     class Meta:
         model = UserInfo
-        fields=['name',"password","age","account","create_time","gender","dep"]
+        fields = ['name', "password", "age", "account", "create_time", "gender", "dep"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            field.widget.attrs = {"class": "form-control", "placeholder": field.label}
 
 
 def user_add(req):
     if req.method == "GET":
         form = MyForm()
-        return render(req, "user_add.html", {"form":form})
-    # 获取post请求的数据并且保存
-    # name = req.POST.get("name")
-    # pwd = req.POST.get("pwd")
-    # age = req.POST.get("age")
-    # acc = req.POST.get("acc")
-    # ctime = req.POST.get("ctime")
-    # gender = req.POST.get("gender")
-    # dep = req.POST.get("dep")
-    # UserInfo.objects.create(name=name, password=pwd, age=age, account=acc, create_time=ctime, gender=gender, dep_id=dep)
-    # return redirect("/user/list")
+        return render(req, "user_add.html", {"form": form})
+    # 获取post请求的数据并且进行数据校验
+    form = MyForm(data=req.POST)
+    if form.is_valid():  # 数据校验成功
+        # 保存数据
+        form.save(commit=True)
+        return redirect("/user/list")
+    # 校验失败,需要停留在这个页面并且显示错误信息
+    return render(req, "user_add.html", {"form": form})

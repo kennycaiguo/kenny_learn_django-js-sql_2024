@@ -45,8 +45,8 @@
                   <td>{{ user.dep.title }}</td>     {# django提供的针对外键为数字特殊语法 obj.xxx.xxx xxx就是xxx_id去掉_id #}
                   <td>
 {#                      <a href="/dep/edit/?nid={{ dep.id }}" class="btn btn-success btn-xs">编辑</a>#}
-                      <a href="/dep/{{ user.id }}/edit/" class="btn btn-success btn-xs">编辑</a>
-                      <a href="/dep/del/?nid={{ user.id }}" class="btn btn-danger btn-xs">删除</a>
+                      <a href="/user/{{ user.id }}/edit/" class="btn btn-success btn-xs">编辑</a>
+                      <a href="/user/del/?nid={{ user.id }}" class="btn btn-danger btn-xs">删除</a>
                   </td>
               </tr>
               {% endfor %}
