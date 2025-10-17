@@ -1,16 +1,17 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from day16app.models import Department, UserInfo
+from django import forms
 
 
 # Create your views here.
 
 def home(req):
-    return HttpResponse("Welcome to the home page")
+    return render(req, "home.html")
 
 
 def index(req):
-    return render(req, "index.html")
+    return render(req, "home.html")
 
 
 def dep_list(req):
@@ -51,7 +52,7 @@ def dep_del(req):
 #     return redirect("/dep/list")
 
 # 写法2
-def dep_edit(req,nid):
+def dep_edit(req, nid):
     # 处理get
     if req.method == "GET":
         dep = Department.objects.filter(id=nid).first()
@@ -61,3 +62,54 @@ def dep_edit(req,nid):
     title = req.POST.get("title")
     Department.objects.filter(id=nid).update(title=title)
     return redirect("/dep/list")
+
+
+def user_list(req):
+    users = UserInfo.objects.all()
+    # 数据库里面拿到的时间格式不太好,我们需要把它转化为字符串格式
+    # for user in users:
+    #     user.create_time = user.create_time.strftime("%Y-%m-%d %H:%M:%S")
+    return render(req, "user_list.html", {'users': users})
+
+
+# 这个是最原始的写法
+# def user_add(req):
+#     if req.method == "GET":
+#         context = {
+#             "g_choice":UserInfo.gender_choices,
+#             "deps": Department.objects.all()
+#         }
+#         return render(req, "user_add.html",context)
+#     # 获取post请求的数据并且保存
+#     name = req.POST.get("name")
+#     pwd = req.POST.get("pwd")
+#     age = req.POST.get("age")
+#     acc = req.POST.get("acc")
+#     ctime = req.POST.get("ctime")
+#     gender = req.POST.get("gender")
+#     dep = req.POST.get("dep")
+#     UserInfo.objects.create(name=name,password=pwd,age=age,account=acc,create_time=ctime,gender=gender,dep_id=dep)
+#     return redirect("/user/list")
+
+# 使用django ModelForm组件的写法
+# 1.定义一个表单类继承自forms.ModelForm
+class MyForm(forms.ModelForm):
+    class Meta:
+        model = UserInfo
+        fields=['name',"password","age","account","create_time","gender","dep"]
+
+
+def user_add(req):
+    if req.method == "GET":
+        form = MyForm()
+        return render(req, "user_add.html", {"form":form})
+    # 获取post请求的数据并且保存
+    # name = req.POST.get("name")
+    # pwd = req.POST.get("pwd")
+    # age = req.POST.get("age")
+    # acc = req.POST.get("acc")
+    # ctime = req.POST.get("ctime")
+    # gender = req.POST.get("gender")
+    # dep = req.POST.get("dep")
+    # UserInfo.objects.create(name=name, password=pwd, age=age, account=acc, create_time=ctime, gender=gender, dep_id=dep)
+    # return redirect("/user/list")

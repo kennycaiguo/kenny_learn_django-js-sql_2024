@@ -20,11 +20,11 @@ class UserInfo(models.Model):
     # 这个类型有约束的,也就是外键
     # 只需要写dep,然后django会把它变为dep_id
     # 方式1,需要设置关联的表(类),还要设置表的关联的列,还需要设置部门被删除了,对应的员工数据会级联删除.
-    dep = models.ForeignKey(to="Department", to_field="id",on_delete=models.CASCADE)
+    dep = models.ForeignKey(verbose_name="部门",to="Department", to_field="id",on_delete=models.CASCADE)
     # 方式2.需要设置关联的表(类),还要设置表的关联的列,还需要设置可以置空,也就是部门被删除了,对应员工的部门变为空
     # dep = models.ForeignKey(to="Department", to_field="id",null=True,blank=True, on_delete=models.SET_NULL)
     gender_choices = (
         (0,"女"),
-        (1,"难")
+        (1,"男")
     )
     gender = models.SmallIntegerField(verbose_name="性别",choices=gender_choices) # 注意django中性别的处理方式
