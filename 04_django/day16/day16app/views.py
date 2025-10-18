@@ -94,7 +94,7 @@ def user_list(req):
 # 使用django ModelForm组件的写法
 # 1.定义一个表单类继承自forms.ModelForm
 class MyForm(forms.ModelForm):
-    name = forms.CharField(min_length=2,label="姓名")  # 设置姓名的最小长度
+    name = forms.CharField(min_length=2, label="姓名")  # 设置姓名的最小长度
 
     class Meta:
         model = UserInfo
@@ -107,6 +107,7 @@ class MyForm(forms.ModelForm):
 
 
 def user_add(req):
+    """新增用户"""
     if req.method == "GET":
         form = MyForm()
         return render(req, "user_add.html", {"form": form})
@@ -118,3 +119,23 @@ def user_add(req):
         return redirect("/user/list")
     # 校验失败,需要停留在这个页面并且显示错误信息
     return render(req, "user_add.html", {"form": form})
+
+
+def user_edit(req, nid):
+    """编辑用户信息"""
+    if req.method == "GET":
+        # 查询数据
+        user1 = UserInfo.objects.filter(id=nid).first()
+        form = MyForm(instance=user1)
+        return render(req,"user_edit.html",{"form":form})
+    # 获取需要更新的对象,这个更新之前的对象
+    user = UserInfo.objects.filter(id=nid).first()
+    print(user)
+    # 获取post请求的数据并且进行数据校验
+    form = MyForm(instance=user,data=req.POST) # 更新的时候需要两个参数来构造form对象:数据和需要更新的实例
+    if form.is_valid():  # 数据校验成功
+        # 保存数据
+        form.save()  # 新增和更新都是使用这个方法,只是form里面的数据不一样
+        return redirect("/user/list")
+    # 校验失败,需要停留在这个页面并且显示错误信息
+    return render(req, "user_edit.html", {"form": form})

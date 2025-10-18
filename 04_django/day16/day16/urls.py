@@ -36,5 +36,6 @@ urlpatterns = [
     # 员工管理相关路由
     path('user/list/', views.user_list),
     path('user/add/', views.user_add),
+    path('user/<int:nid>/edit/', views.user_edit),
 
 ]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
