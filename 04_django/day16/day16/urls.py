@@ -20,22 +20,28 @@ from django.conf.urls.static import static
 from day16 import settings
 from day16app import views
 
-
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('', views.home),
-    path('index/', views.index),
-    #部门管理相关路由
-    path('dep/list/', views.dep_list),
-    path('dep/add/', views.dep_add),
-    path('dep/del/', views.dep_del),
-    # path('dep/edit/', views.dep_edit),
-    # 路由格式 :http://127.0.0.1:8000/dep/1/edit
-    path('dep/<int:nid>/edit/', views.dep_edit),
+                  # path('admin/', admin.site.urls),
+                  path('', views.home),
+                  path('index/', views.index),
+                  # 部门管理相关路由
+                  path('dep/list/', views.dep_list),
+                  path('dep/add/', views.dep_add),
+                  path('dep/del/', views.dep_del),
+                  # path('dep/edit/', views.dep_edit),
+                  # 路由格式 :http://127.0.0.1:8000/dep/1/edit
+                  path('dep/<int:nid>/edit/', views.dep_edit),
 
-    # 员工管理相关路由
-    path('user/list/', views.user_list),
-    path('user/add/', views.user_add),
-    path('user/<int:nid>/edit/', views.user_edit),
+                  # 员工管理相关路由
+                  path('user/list/', views.user_list),
+                  path('user/add/', views.user_add),
+                  path('user/<int:nid>/edit/', views.user_edit),
+                  path('user/<int:nid>/del/', views.user_del),
 
-]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+                  # 靓号管理相关路由
+                  path('pretty/list/', views.pretty_list),
+                  #添加靓号
+                  path('pretty/add/', views.pretty_add),
+                  #修改靓号
+                  path('pretty/<int:nid>/edit/', views.pretty_edit),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
