@@ -44,4 +44,6 @@ urlpatterns = [
                   path('pretty/add/', views.pretty_add),
                   #修改靓号
                   path('pretty/<int:nid>/edit/', views.pretty_edit),
+                  # 删除靓号
+                  path('pretty/<int:nid>/del/', views.pretty_del),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

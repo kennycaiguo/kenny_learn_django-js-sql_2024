@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -154,11 +155,13 @@ def pretty_list(req):
 
 
 # 操作PrettyNumber数据的ModelForm类
-class PrettyNumberForm(forms.ModelForm):
+class PrettyNumberAddForm(forms.ModelForm):
+    # 添加验证器方式1. 正则表达式 ,验证手机号格式
     mobile = forms.CharField(
         label="手机号",
         validators=[RegexValidator(r'^1[3-9]\d{9}$', '手机号格式错误')]
     )
+
     class Meta:
         model = models.PrettyNumber
         # fields = ['mobile', "price", "level", "status"]
@@ -169,14 +172,22 @@ class PrettyNumberForm(forms.ModelForm):
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control", "placeholder": field.label}
 
+    # # 添加验证方式2,钩子函数,验证手机号码是否已经存在,(当然也可以验证手机号格式,这里不是验证手机号格式)
+    def clean_mobile(self):
+        txt_mobile = self.cleaned_data["mobile"]
+        exist = models.PrettyNumber.objects.filter(mobile=txt_mobile).exists()
+        if exist:
+            raise ValidationError("手机号已经存在,不能重复")  # 验证失败就抛异常
+        return txt_mobile  # 验证通过就把他返回
+
 
 def pretty_add(req):
     """新增靓号"""
     if req.method == "GET":
-        form = PrettyNumberForm()
+        form = PrettyNumberAddForm()
         return render(req, "pretty_add.html", {"form": form})
     # 获取post请求的数据并且进行数据校验
-    form = PrettyNumberForm(data=req.POST)
+    form = PrettyNumberAddForm(data=req.POST)
     if form.is_valid():  # 数据校验成功
         # 保存数据
         form.save(commit=True)
@@ -185,17 +196,61 @@ def pretty_add(req):
     return render(req, "pretty_add.html", {"form": form})
 
 
+class PrettyNumberEditForm(forms.ModelForm):
+    # 添加验证器方式1. 正则表达式 ,验证手机号格式
+    # mobile = forms.CharField(
+    #     label="手机号",
+    #     validators=[RegexValidator(r'^1[3-9]\d{9}$', '手机号格式错误')],
+    #     disabled=True  # 不允许编辑手机号
+    # )
+    mobile = forms.CharField(
+        label="手机号",
+        validators=[RegexValidator(r'^1[3-9]\d{9}$', '手机号格式错误')],
+        disabled=False  # 允许编辑手机号
+    )
+
+    class Meta:
+        model = models.PrettyNumber
+        # fields = ['mobile', "price", "level", "status"]
+        fields = "__all__"  # 也可以这么写,表示模型中所有的字段都需要
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            field.widget.attrs = {"class": "form-control", "placeholder": field.label}
+
+    # # 添加验证方式2,钩子函数,验证手机号格式的另外一种方式
+    # def clean_mobile(self):
+    #     txt_mobile = self.cleaned_data["mobile"]
+    #     if len(txt_mobile) !=11:
+    #         raise ValidationError("手机号格式错误")  # 验证失败就抛异常
+    #     return txt_mobile  # 验证通过就把他返回
+
+    # 排除自己以外,手机号不能重复(有点绕,慢慢体会)
+    def clean_mobile(self):
+        txt_mobile = self.cleaned_data["mobile"]
+        exist = models.PrettyNumber.objects.exclude(id=self.instance.pk).filter(mobile=txt_mobile).exists()
+        if exist:
+            raise ValidationError("手机号已经存在,不能重复")  # 验证失败就抛异常
+        return txt_mobile  # 验证通过就把他返回
+
+
 def pretty_edit(req, nid):
     """修改靓号"""
     pretty_num = models.PrettyNumber.objects.filter(id=nid).first()
     if req.method == "GET":
-        form = PrettyNumberForm(instance=pretty_num)
-        return render(req, "pretty_edit.html", {"form": form,"nid":nid})
+        form = PrettyNumberEditForm(instance=pretty_num)
+        return render(req, "pretty_edit.html", {"form": form})  # 使用了验证器,这里就不要传递nid,获取不到的.
     # 获取post请求的数据并且进行数据校验
-    form = PrettyNumberForm(data=req.POST,instance=pretty_num)
+    form = PrettyNumberEditForm(data=req.POST, instance=pretty_num)
     if form.is_valid():  # 数据校验成功
         # 保存数据
         form.save(commit=True)
         return redirect("/pretty/list")
     # 校验失败,需要停留在这个页面并且显示错误信息
     return render(req, "pretty_edit.html", {"form": form})
+
+
+def pretty_del(req, nid):
+    models.PrettyNumber.objects.filter(id=nid).delete()
+    return redirect("/pretty/list/")

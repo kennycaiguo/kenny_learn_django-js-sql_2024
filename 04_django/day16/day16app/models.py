@@ -37,7 +37,7 @@ class UserInfo(models.Model):
 class PrettyNumber(models.Model):
     """靓号表"""
     mobile = models.CharField(verbose_name="手机号码", max_length=11)
-    price = models.IntegerField(verbose_name="价钱",default=3000)
+    price = models.IntegerField(verbose_name="价钱",default=2000)
     level_choice = (
         (1, "一级"),
         (2, "二级"),

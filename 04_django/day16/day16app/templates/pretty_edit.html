@@ -12,8 +12,8 @@
               <h3 class="panel-title">修改靓号</h3>
           </div>
           <div class="panel-body">
-          {# 表单  #}
-           <form action="/pretty/{{ nid }}/edit/" method="post" novalidate>
+          {# 表单有时候,如果你不知道然后获取提交链接,可以不写,他会提交到当前路由  #}
+           <form  method="post"  novalidate>
                {% csrf_token %}
                {% for item in form %}
                   <div class="form-group">
