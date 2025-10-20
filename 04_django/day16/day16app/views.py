@@ -150,8 +150,14 @@ def user_del(req, nid):
 # 靓号管理函数
 def pretty_list(req):
     """靓号列表"""
-    pretty_data = models.PrettyNumber.objects.all().order_by("-id")
-    return render(req, "pretty_list.html", {"pretties": pretty_data})
+    term = {}
+    kw = req.GET.get("kw","")
+    if kw:
+        term["mobile__contains"] = kw
+    # res = models.PrettyNumber.objects.filter(**term)
+    # print(res)
+    pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level") #filter方法当里面的条件为空就相当于all()方法
+    return render(req, "pretty_list.html", {"pretties": pretty_data,"kw":kw})
 
 
 # 操作PrettyNumber数据的ModelForm类
