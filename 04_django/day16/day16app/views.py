@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.utils.safestring import mark_safe
 from day16app.models import Department, UserInfo  # 这两个是上一次导入的,不改了
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
 from django import forms
@@ -147,17 +148,127 @@ def user_del(req, nid):
     return redirect("/user/list/")
 
 
-# 靓号管理函数
+from day16app.addnum import addData
+
+
+# 靓号管理函数,写法1.
+# def pretty_list(req):
+#     """靓号列表"""
+#     # addData()
+#     term = {}
+#     kw = req.GET.get("kw", "")
+#     if kw:
+#         term["mobile__contains"] = kw
+#     # res = models.PrettyNumber.objects.filter(**term)
+#     # print(res)
+#     # pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level") #filter方法当里面的条件为空就相当于all()方法
+#     # 分页功能
+#     page = int(req.GET.get("page", 1))  # 默认是第一页
+#     page_size = 10  # 每一页需要显示的数量
+#     start = (page - 1) * page_size  # 计算开位置
+#     end = page * page_size  # 计算结束位置
+#
+#     pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level")[start:end]  # 只显示前页面从开始到结束之间的数据
+#
+#     # 获取总共有多少条数据
+#     count = models.PrettyNumber.objects.filter(**term).order_by("-level").count()
+#     # 计算总页数
+#     page_count, remain = divmod(count, page_size)  # divmod(a,b)函数会计算 a/b然后返回一个元组(商,余数),我们可以用2个变量来接受,一个是商,另外一个是余数
+#     if remain:
+#         page_count += 1  # 如果余数不为0,总页数需要+1,即使余数是1也需要+1
+#     # 计算出当前的显示范围
+#     increment = 5
+#     page_start = page - increment
+#     if page_start < 1:
+#         page_start = 1
+#     page_end = page + increment
+#     if page_end > page_count:
+#         page_end = page_count
+#     page_str_list = []
+#     for i in range(page_start, page_end + 1):  # 这里page_count需要加1因为for...range不包括后面的值
+#         if i == page:
+#             el = '<li class="active"><a href="?page={}">{}</a></li>'.format(i, i)  #如果是当前页面,我们给他添加一个样式
+#         else:
+#             el = '<li><a href="?page={}">{}</a></li>'.format(i, i)
+#         page_str_list.append(el)
+#         page_str = mark_safe("".join(page_str_list))
+#
+#     return render(req, "pretty_list.html", {"pretties": pretty_data, "kw": kw, "page_str": page_str})
+
+# 靓号管理函数,写法2.
 def pretty_list(req):
     """靓号列表"""
+    # addData()
     term = {}
-    kw = req.GET.get("kw","")
+    kw = req.GET.get("kw", "")
     if kw:
         term["mobile__contains"] = kw
     # res = models.PrettyNumber.objects.filter(**term)
     # print(res)
-    pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level") #filter方法当里面的条件为空就相当于all()方法
-    return render(req, "pretty_list.html", {"pretties": pretty_data,"kw":kw})
+    # pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level") #filter方法当里面的条件为空就相当于all()方法
+    # 分页功能
+    page = int(req.GET.get("page", 1))  # 默认是第一页
+    page_size = 10  # 每一页需要显示的数量
+    start = (page - 1) * page_size  # 计算开位置
+    end = page * page_size  # 计算结束位置
+
+    pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level")[start:end]  # 只显示前页面从开始到结束之间的数据
+
+    # 获取总共有多少条数据
+    count = models.PrettyNumber.objects.filter(**term).order_by("-level").count()
+    # 计算总页数
+    page_count, remain = divmod(count, page_size)  # divmod(a,b)函数会计算 a/b然后返回一个元组(商,余数),我们可以用2个变量来接受,一个是商,另外一个是余数
+    if remain:
+        page_count += 1  # 如果余数不为0,总页数需要+1,即使余数是1也需要+1
+    # 计算出当前的显示范围
+    incr = 5
+    if page_count <= 2 * incr + 1:  # 数据库的数据比较少的时候
+        page_start = 1
+        page_end = page_count
+    else:
+        # 数据库的数据比较多
+        if page <= incr: #当前页码比增量还小或者等于增量,就把起始页码固定为1
+            page_start = 1
+            page_end = 2 * incr +1
+        else:
+            if (page+5) > page_count:
+                page_start = page_count - 2 * incr
+                page_end = page_count
+            else:
+                page_start = page - incr
+                page_end = page + incr
+
+    page_str_list = []
+    # 首页
+    first = '<li><a href="?page={}">首页</a></li>'.format(1)
+    page_str_list.append(first)
+    # 上一页
+    if page > 1:
+        prev = '<li><a href="?page={}">上一页</a></li>'.format(page-1)
+    else:
+        prev = '<li><a href="?page={}">上一页</a></li>'.format(1)
+    page_str_list.append(prev)
+
+    for i in range(page_start, page_end + 1):  # 这里page_count需要加1因为for...range不包括后面的值
+        if i == page:
+            el = '<li class="active"><a href="?page={}">{}</a></li>'.format(i, i)  # 如果是当前页面,我们给他添加一个样式
+        else:
+            el = '<li><a href="?page={}">{}</a></li>'.format(i, i)
+        page_str_list.append(el)
+        # page_str = mark_safe("".join(page_str_list))
+
+    # 下一页
+    if page >= page_count:
+        next = '<li><a href="?page={}">下一页</a></li>'.format(page_count)
+    else:
+        next = '<li><a href="?page={}">下一页</a></li>'.format(page+1)
+    page_str_list.append(next)
+
+    # 尾页
+    last = '<li><a href="?page={}">尾页</a></li>'.format(page_count)
+    page_str_list.append(last)
+    page_str = mark_safe("".join(page_str_list))
+    return render(req, "pretty_list.html", {"pretties": pretty_data, "kw": kw, "page_str": page_str})
 
 
 # 操作PrettyNumber数据的ModelForm类

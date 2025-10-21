@@ -58,8 +58,26 @@
               {% endfor %}
               </tbody>
           </table>
+        </div>
+         {#    弹性盒子     #}
+         <div style="display: flex">
+            {#     分页组件        #}
+             <ul class="pagination">
+                    {{page_str}}
+             </ul>
+             {#    跳转页码功能         #}
+             <div style="margin-top: 20px;margin-left: 10px;">
+                 <form method="get">
+                    <div class="input-group" style="width: 180px;">
+                      <input type="text" name="page" class="form-control" placeholder="输入页码...">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">跳转</button>
+                      </span>
+                    </div>
+                 </form>
+             </div>
 
-          </div>
+         </div>
 </div>
 {% endblock %}
 
