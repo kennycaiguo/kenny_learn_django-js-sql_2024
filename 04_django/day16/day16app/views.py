@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from day16app.models import Department, UserInfo  # 这两个是上一次导入的,不改了
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
 from django import forms
-
+from day16app.utils.pagination import Pagination
 
 # Create your views here.
 
@@ -21,7 +21,15 @@ def index(req):
 def dep_list(req):
     """显示部门列表"""
     dep_list = Department.objects.all()
-    return render(req, "dep_list.html", {"deps": dep_list})
+    #分页功能实现
+    # 1.实例化分页组件
+    page_obj = Pagination(req,dep_list,page_size=2)
+    # 2.获取分页后的数据
+    page_query_set = page_obj.page_queryset
+    # 3.获取分页器的html字符串
+    page_str = page_obj.gen_html()
+    # 渲染数据
+    return render(req, "dep_list.html", {"deps": page_query_set,"page_str":page_str})
 
 
 def dep_add(req):
@@ -70,10 +78,15 @@ def dep_edit(req, nid):
 
 def user_list(req):
     users = UserInfo.objects.all()
-    # 数据库里面拿到的时间格式不太好,我们需要把它转化为字符串格式
-    # for user in users:
-    #     user.create_time = user.create_time.strftime("%Y-%m-%d %H:%M:%S")
-    return render(req, "user_list.html", {'users': users})
+    # 分页
+    # 1.实例化分页类的对象
+    page_obj = Pagination(req,users,page_size=3)
+    # 2.获取分页数据
+    page_query_set = page_obj.page_queryset
+    # 3.获取分页器的html字符串
+    page_str = page_obj.gen_html()
+    # 渲染数据
+    return render(req, "user_list.html", {'users': page_query_set,"page_str":page_str})
 
 
 # 这个是最原始的写法
@@ -150,7 +163,6 @@ def user_del(req, nid):
 
 from day16app.addnum import addData
 
-
 # 靓号管理函数,写法1.
 # def pretty_list(req):
 #     """靓号列表"""
@@ -195,6 +207,8 @@ from day16app.addnum import addData
 #
 #     return render(req, "pretty_list.html", {"pretties": pretty_data, "kw": kw, "page_str": page_str})
 
+
+
 # 靓号管理函数,写法2.
 def pretty_list(req):
     """靓号列表"""
@@ -203,72 +217,13 @@ def pretty_list(req):
     kw = req.GET.get("kw", "")
     if kw:
         term["mobile__contains"] = kw
-    # res = models.PrettyNumber.objects.filter(**term)
-    # print(res)
-    # pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level") #filter方法当里面的条件为空就相当于all()方法
+
+    pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level")
+    page_obj = Pagination(req,pretty_data)
+    page_query_set = page_obj.page_queryset
     # 分页功能
-    page = int(req.GET.get("page", 1))  # 默认是第一页
-    page_size = 10  # 每一页需要显示的数量
-    start = (page - 1) * page_size  # 计算开位置
-    end = page * page_size  # 计算结束位置
-
-    pretty_data = models.PrettyNumber.objects.filter(**term).order_by("-level")[start:end]  # 只显示前页面从开始到结束之间的数据
-
-    # 获取总共有多少条数据
-    count = models.PrettyNumber.objects.filter(**term).order_by("-level").count()
-    # 计算总页数
-    page_count, remain = divmod(count, page_size)  # divmod(a,b)函数会计算 a/b然后返回一个元组(商,余数),我们可以用2个变量来接受,一个是商,另外一个是余数
-    if remain:
-        page_count += 1  # 如果余数不为0,总页数需要+1,即使余数是1也需要+1
-    # 计算出当前的显示范围
-    incr = 5
-    if page_count <= 2 * incr + 1:  # 数据库的数据比较少的时候
-        page_start = 1
-        page_end = page_count
-    else:
-        # 数据库的数据比较多
-        if page <= incr: #当前页码比增量还小或者等于增量,就把起始页码固定为1
-            page_start = 1
-            page_end = 2 * incr +1
-        else:
-            if (page+5) > page_count:
-                page_start = page_count - 2 * incr
-                page_end = page_count
-            else:
-                page_start = page - incr
-                page_end = page + incr
-
-    page_str_list = []
-    # 首页
-    first = '<li><a href="?page={}">首页</a></li>'.format(1)
-    page_str_list.append(first)
-    # 上一页
-    if page > 1:
-        prev = '<li><a href="?page={}">上一页</a></li>'.format(page-1)
-    else:
-        prev = '<li><a href="?page={}">上一页</a></li>'.format(1)
-    page_str_list.append(prev)
-
-    for i in range(page_start, page_end + 1):  # 这里page_count需要加1因为for...range不包括后面的值
-        if i == page:
-            el = '<li class="active"><a href="?page={}">{}</a></li>'.format(i, i)  # 如果是当前页面,我们给他添加一个样式
-        else:
-            el = '<li><a href="?page={}">{}</a></li>'.format(i, i)
-        page_str_list.append(el)
-        # page_str = mark_safe("".join(page_str_list))
-
-    # 下一页
-    if page >= page_count:
-        next = '<li><a href="?page={}">下一页</a></li>'.format(page_count)
-    else:
-        next = '<li><a href="?page={}">下一页</a></li>'.format(page+1)
-    page_str_list.append(next)
-
-    # 尾页
-    last = '<li><a href="?page={}">尾页</a></li>'.format(page_count)
-    page_str_list.append(last)
-    page_str = mark_safe("".join(page_str_list))
-    return render(req, "pretty_list.html", {"pretties": pretty_data, "kw": kw, "page_str": page_str})
+    page_str = page_obj.gen_html()
+    return render(req, "pretty_list.html", {"pretties": page_query_set, "kw": kw, "page_str": page_str})
 
 
 # 操作PrettyNumber数据的ModelForm类
