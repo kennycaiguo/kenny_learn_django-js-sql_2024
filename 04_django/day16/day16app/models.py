@@ -1,6 +1,12 @@
 from django.db import models
 
 
+class Admin(models.Model):
+    """管理员表"""
+    username = models.CharField(verbose_name="用户名", max_length=32)
+    password = models.CharField(verbose_name="密  码", max_length=64)
+
+
 # Create your models here.
 class Department(models.Model):
     """部门表"""
@@ -50,3 +56,4 @@ class PrettyNumber(models.Model):
         (1, "已使用"),
     )
     status = models.SmallIntegerField(verbose_name="状态", choices=status_choice, default=0)
+

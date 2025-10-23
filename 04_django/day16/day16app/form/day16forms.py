@@ -80,3 +80,31 @@ class PrettyNumberEditForm(BootstrapModelForm):
         if exist:
             raise ValidationError("手机号已经存在,不能重复")  # 验证失败就抛异常
         return txt_mobile  # 验证通过就把他返回
+
+
+class AdminAddForm(BootstrapModelForm):
+    class Meta:
+        model = models.Admin
+        fields = "__all__"
+
+    # 管理员账户不能重复
+    def clean_username(self):
+        txt_username = self.cleaned_data["username"]
+        exist = models.Admin.objects.filter(username=txt_username).exists()
+        if exist:
+            raise ValidationError("用户名不能重复")  # 验证失败就抛异常
+        return txt_username  # 验证通过就把他返回
+
+
+class AdminEditForm(BootstrapModelForm):
+    class Meta:
+        model = models.Admin
+        fields = "__all__"
+
+    # 管理员账户不能重复
+    def clean_username(self):
+        txt_username = self.cleaned_data["username"]
+        exist = models.Admin.objects.exclude(id=self.instance.pk).filter(username=txt_username).exists()
+        if exist:
+            raise ValidationError("用户名不能重复")  # 验证失败就抛异常
+        return txt_username  # 验证通过就把他返回
