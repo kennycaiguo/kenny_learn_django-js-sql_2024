@@ -1,49 +1,33 @@
-"""
-URL configuration for day16 project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 from day16 import settings
 from day16app import views
+from day16app.views import dep_view,user_view,pretty_view,home_view
 
 urlpatterns = [
                   # path('admin/', admin.site.urls),
-                  path('', views.home),
-                  path('index/', views.index),
+                  path('', home_view.home),
+                  path('index/', home_view.index),
                   # 部门管理相关路由
-                  path('dep/list/', views.dep_list),
-                  path('dep/add/', views.dep_add),
-                  path('dep/del/', views.dep_del),
-                  # path('dep/edit/', views.dep_edit),
+                  path('dep/list/', dep_view.dep_list),
+                  path('dep/add/', dep_view.dep_add),
+                  path('dep/del/', dep_view.dep_del),
                   # 路由格式 :http://127.0.0.1:8000/dep/1/edit
-                  path('dep/<int:nid>/edit/', views.dep_edit),
+                  path('dep/<int:nid>/edit/', dep_view.dep_edit),
 
                   # 员工管理相关路由
-                  path('user/list/', views.user_list),
-                  path('user/add/', views.user_add),
-                  path('user/<int:nid>/edit/', views.user_edit),
-                  path('user/<int:nid>/del/', views.user_del),
+                  path('user/list/', user_view.user_list),
+                  path('user/add/', user_view.user_add),
+                  path('user/<int:nid>/edit/', user_view.user_edit),
+                  path('user/<int:nid>/del/', user_view.user_del),
 
                   # 靓号管理相关路由
-                  path('pretty/list/', views.pretty_list),
+                  path('pretty/list/', pretty_view.pretty_list),
                   #添加靓号
-                  path('pretty/add/', views.pretty_add),
+                  path('pretty/add/', pretty_view.pretty_add),
                   #修改靓号
-                  path('pretty/<int:nid>/edit/', views.pretty_edit),
+                  path('pretty/<int:nid>/edit/', pretty_view.pretty_edit),
                   # 删除靓号
-                  path('pretty/<int:nid>/del/', views.pretty_del),
+                  path('pretty/<int:nid>/del/', pretty_view.pretty_del),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
