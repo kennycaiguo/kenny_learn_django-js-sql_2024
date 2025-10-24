@@ -37,6 +37,10 @@ def dep_del(req):
 
 def dep_edit(req, nid):
     # 处理get
+    # 保证nid存在
+    if not models.Department.objects.filter(id=nid).exists():
+        return redirect("/dep/list")     # 方式1 重定向
+        # return render(req,"error.html")   # 方式2 展示错误页面
     if req.method == "GET":
         dep = models.Department.objects.filter(id=nid).first()
         return render(req, "dep_edit.html", {"dep": dep})

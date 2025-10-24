@@ -37,6 +37,8 @@ urlpatterns = [
           path('admin/add/',admin_view.admin_add),
           # 编辑管理员信息
           path('admin/<int:nid>/edit/',admin_view.admin_edit),
+          # 重置管理员密码
+          path('admin/<int:nid>/reset/',admin_view.admin_reset),
           # 删除管理员
           path('admin/<int:nid>/del/',admin_view.admin_del),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

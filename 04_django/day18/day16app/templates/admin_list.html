@@ -37,6 +37,7 @@
                   <th>ID</th>
                   <th>用户名</th>
                   <th>密码</th>
+                  <th>重置密码</th>
                   <th>操作</th>
               </tr>
               </thead>
@@ -47,7 +48,9 @@
                   <td>{{ ad.username }}</td>
                   <td>*********</td>
                   <td>
-{#                      <a href="/dep/edit/?nid={{ dep.id }}" class="btn btn-success btn-xs">编辑</a>#}
+                      <a href="/admin/{{ ad.id }}/reset/" class="btn btn-primary btn-xs">重置密码</a>
+                  </td>
+                  <td>
                       <a href="/admin/{{ ad.id }}/edit/" class="btn btn-success btn-xs">编辑</a>
                       <a href="/admin/{{ ad.id}}/del/" class="btn btn-danger btn-xs">删除</a>
                   </td>

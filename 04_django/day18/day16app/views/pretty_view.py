@@ -1,8 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
 from day16app.utils.pagination import Pagination
-from day16app.form import day16forms
+from day16app.utils import day16forms
 
 
 # 靓号管理函数.
@@ -39,10 +38,13 @@ def pretty_add(req):
 
 def pretty_edit(req, nid):
     """修改靓号"""
+    # 保证nid是存在的
     pretty_num = models.PrettyNumber.objects.filter(id=nid).first()
+    if not pretty_num:
+        # return redirect("/pretty/list/")   # 方式1 重定向
+        return render(req, "error.html",{"msg":f"没有id为{nid}的靓号"})  # 方式2 展示错误页面
     if req.method == "GET":
         form = day16forms.PrettyNumberEditForm(instance=pretty_num)
-        # return render(req, "edit_data.html", {"form": form,"title":"修改靓号"})  # 使用了验证器,这里就不要传递nid,获取不到的.
         return render(req, "add_or_edit.html", {"form": form, "title": "修改靓号"})  # 使用了验证器,这里就不要传递nid,获取不到的.
     # 获取post请求的数据并且进行数据校验
     form = day16forms.PrettyNumberEditForm(data=req.POST, instance=pretty_num)
@@ -51,10 +53,13 @@ def pretty_edit(req, nid):
         form.save(commit=True)
         return redirect("/pretty/list")
     # 校验失败,需要停留在这个页面并且显示错误信息
-    # return render(req, "edit_data.html", {"form": form, "title": "修改靓号"})
     return render(req, "add_or_edit.html", {"form": form, "title": "修改靓号"})
 
 
 def pretty_del(req, nid):
-    models.PrettyNumber.objects.filter(id=nid).delete()
+    # 保证nid是有效的
+    pretty = models.PrettyNumber.objects.filter(id=nid).first()
+    if not pretty:
+        return redirect("/pretty/list/") # 如果nid不存在,就跳转到靓号列表
+    pretty.delete()
     return redirect("/pretty/list/")

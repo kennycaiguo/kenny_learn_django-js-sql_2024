@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
 from day16app.utils.pagination import Pagination
-from day16app.form import day16forms
+from day16app.utils import day16forms
 
 
 def user_list(req):
@@ -32,10 +32,12 @@ def user_add(req):
     return render(req, "user_add.tml", {"form": form})
 
 
-
-
 def user_edit(req, nid):
     """编辑用户信息"""
+    # 保证nid存在
+    if not models.UserInfo.objects.filter(id=nid).exists():
+        return redirect("/user/list/")  # 方式1
+        # return render(req,"error.html") #方式2
     # 查询数据
     user1 = models.UserInfo.objects.filter(id=nid).first()  # 放在这里是因为有2个地方需要用到这个user1
     if req.method == "GET":
@@ -53,6 +55,9 @@ def user_edit(req, nid):
 
 def user_del(req, nid):
     """删除用户信息"""
-    models.UserInfo.objects.filter(id=nid).delete()
+    # 保证nid是存在的.
+    user = models.UserInfo.objects.filter(id=nid).first()
+    if not user:
+        return redirect("/user/list/")  # 如果不存在就需要跳转到用户列表
+    user.delete()
     return redirect("/user/list/")
-
