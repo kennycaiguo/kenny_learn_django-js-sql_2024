@@ -4,7 +4,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
-from day16app.utils.basemodelform import BootstrapModelForm
+from day16app.utils.basemform import BootstrapModelForm
 from django import forms
 from day16app import models
 from day16app.models import UserInfo, Department
