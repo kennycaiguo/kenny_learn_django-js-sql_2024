@@ -5,6 +5,8 @@ from day16app.utils import day16forms
 
 
 def admin_list(req):
+    # session信息校验
+
     # 搜索功能
     term = {}
     kw = req.GET.get("kw", "")
