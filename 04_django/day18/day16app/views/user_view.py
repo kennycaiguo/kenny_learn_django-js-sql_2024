@@ -5,6 +5,10 @@ from day16app.utils import day16forms
 
 
 def user_list(req):
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     users = models.UserInfo.objects.all()
     # 分页
     # 1.实例化分页类的对象
@@ -19,6 +23,10 @@ def user_list(req):
 
 def user_add(req):
     """新增用户"""
+    # 需要先校验用户是否登录,如果没有,跳转到登录页面
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     if req.method == "GET":
         form = day16forms.UserInfoForm()
         return render(req, "user_add.html", {"form": form})
@@ -34,6 +42,10 @@ def user_add(req):
 
 def user_edit(req, nid):
     """编辑用户信息"""
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 保证nid存在
     if not models.UserInfo.objects.filter(id=nid).exists():
         return redirect("/user/list/")  # 方式1
@@ -55,6 +67,10 @@ def user_edit(req, nid):
 
 def user_del(req, nid):
     """删除用户信息"""
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 保证nid是存在的.
     user = models.UserInfo.objects.filter(id=nid).first()
     if not user:

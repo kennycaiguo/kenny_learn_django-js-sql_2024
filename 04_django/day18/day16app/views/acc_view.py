@@ -37,6 +37,6 @@ def login(req):
             return render(req, "login.html", {"form": form})  # 用户信息验证失败,也就是登录失败
             # return render(req, "login.html", {"form": form,"error_msg":"用户名或者密码错误"})
         # 登录成功,生成随机字符串写到用户浏览器的cookie中,在django中这个操作比较简单.
-        req.session["into"] = {"id": admin.id, "name": admin.username}
+        req.session["info"] = {"id": admin.id, "name": admin.username}
         return redirect("/admin/list/")  # 登录成功,跳转到管理员账户页面
     return render(req, "login.html", {"form": form})  # form表单校验失败

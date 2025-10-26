@@ -5,8 +5,10 @@ from day16app.utils import day16forms
 
 
 def admin_list(req):
-    # session信息校验
-
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 搜索功能
     term = {}
     kw = req.GET.get("kw", "")
@@ -26,6 +28,10 @@ def admin_list(req):
 
 def admin_add(req):
     # 新增管理员
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     if req.method == 'GET':
         form = day16forms.AdminAddForm()
         return render(req, "add_or_edit.html", {"form": form, "title": "新增管理员"})
@@ -41,6 +47,10 @@ def admin_add(req):
 
 def admin_edit(req, nid):
     """修改管理员"""
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 先确保用户传递过来的id有效
     admin1 = models.Admin.objects.filter(id=nid).first()
     # 需要先检查这个id是否存在
@@ -61,6 +71,10 @@ def admin_edit(req, nid):
 
 
 def admin_reset(req, nid):
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 先确保用户传递过来的id有效
     admin1 = models.Admin.objects.filter(id=nid).first()
     # 需要先检查这个id是否存在
@@ -81,6 +95,10 @@ def admin_reset(req, nid):
 
 
 def admin_del(req, nid):
+    # session信息校验,检查用户是否已经登录
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 保证nid存在
     admin = models.Admin.objects.filter(id=nid).first()
     if not admin:

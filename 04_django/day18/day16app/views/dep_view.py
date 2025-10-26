@@ -5,6 +5,9 @@ from day16app.utils.pagination import Pagination
 
 def dep_list(req):
     """显示部门列表"""
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     dep_list = models.Department.objects.all()
     # 分页功能实现
     # 1.实例化分页组件
@@ -19,6 +22,9 @@ def dep_list(req):
 
 def dep_add(req):  # 这个功能太简单了,只有一个字段,不需要ModelForm
     """新增部门"""
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # get
     if req.method == "GET":
         return render(req, "dep_add.html")
@@ -30,6 +36,9 @@ def dep_add(req):  # 这个功能太简单了,只有一个字段,不需要ModelF
 
 def dep_del(req):
     """删除部门"""
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     nid = req.GET.get("nid")
     models.Department.objects.filter(id=nid).delete()
     return redirect("/dep/list")
@@ -37,6 +46,9 @@ def dep_del(req):
 
 def dep_edit(req, nid):
     # 处理get
+    info = req.session.get("info")
+    if not info:  # 用户没有登录
+        return redirect("/login")
     # 保证nid存在
     if not models.Department.objects.filter(id=nid).exists():
         return redirect("/dep/list")     # 方式1 重定向

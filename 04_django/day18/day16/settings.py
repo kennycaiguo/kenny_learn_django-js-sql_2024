@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'day16app.middleware.auth.Middleware1',
+    'day16app.middleware.auth.Middleware2',
 ]
 
 ROOT_URLCONF = 'day16.urls'
