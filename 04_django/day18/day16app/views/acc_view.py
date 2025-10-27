@@ -1,8 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
 from day16app.utils.encrypt import md5
 from day16app.utils.pagination import Pagination
 from day16app.utils import day16forms
+from day16app.utils.code import check_code
+from io import BytesIO
 from django import forms
 from day16app.utils.basemform import BootstrapForm
 
@@ -10,7 +13,7 @@ from day16app.utils.basemform import BootstrapForm
 class LoginForm(BootstrapForm):
     # 这里的字段名一定要和表单里面的name一样,并且要和Admin类里面的字段名一样,否则后面很难操作
     username = forms.CharField(label="用户名", widget=forms.TextInput)
-    password = forms.CharField(label="密 码", widget=forms.PasswordInput)
+    password = forms.CharField(label="密 码", widget=forms.PasswordInput(attrs={"autocomplete": "off"}))
 
     def clean_password(self):
         txt_pwd = self.cleaned_data.get("password")
@@ -40,3 +43,20 @@ def login(req):
         req.session["info"] = {"id": admin.id, "name": admin.username}
         return redirect("/admin/list/")  # 登录成功,跳转到管理员账户页面
     return render(req, "login.html", {"form": form})  # form表单校验失败
+
+
+def logout(req):
+    """注销功能"""
+    # 注销也很简单,就是把session的数据清空
+    req.session.clear()
+    # 然后重定向到登录页面
+    return redirect("/login/")
+
+
+def image_code(req):
+    '''生成图片验证码'''
+    img,code_str = check_code()
+    print(code_str)
+    stream = BytesIO()
+    img.save(stream,"png")
+    return HttpResponse(stream.getvalue())

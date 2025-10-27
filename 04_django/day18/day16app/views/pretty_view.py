@@ -7,10 +7,6 @@ from day16app.utils import day16forms
 # 靓号管理函数.
 def pretty_list(req):
     """靓号列表"""
-    # session信息校验,检查用户是否已经登录
-    info = req.session.get("info")
-    if not info:  # 用户没有登录
-        return redirect("/login")
     # addData()
     term = {}
     kw = req.GET.get("kw", "")
@@ -27,10 +23,6 @@ def pretty_list(req):
 
 def pretty_add(req):
     """新增靓号"""
-    # session信息校验,检查用户是否已经登录
-    info = req.session.get("info")
-    if not info:  # 用户没有登录
-        return redirect("/login")
     if req.method == "GET":
         form = day16forms.PrettyNumberAddForm()
         return render(req, "add_or_edit.html", {"form": form, "title": "添加靓号"})
@@ -46,10 +38,6 @@ def pretty_add(req):
 
 def pretty_edit(req, nid):
     """修改靓号"""
-    # session信息校验,检查用户是否已经登录
-    info = req.session.get("info")
-    if not info:  # 用户没有登录
-        return redirect("/login")
     # 保证nid是存在的
     pretty_num = models.PrettyNumber.objects.filter(id=nid).first()
     if not pretty_num:
@@ -69,10 +57,6 @@ def pretty_edit(req, nid):
 
 
 def pretty_del(req, nid):
-    # session信息校验,检查用户是否已经登录
-    info = req.session.get("info")
-    if not info:  # 用户没有登录
-        return redirect("/login")
     # 保证nid是有效的
     pretty = models.PrettyNumber.objects.filter(id=nid).first()
     if not pretty:

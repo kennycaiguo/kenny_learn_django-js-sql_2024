@@ -44,4 +44,8 @@ urlpatterns = [
 
           #登录相关路由
           path('login/',acc_view.login),
+          # 注销或者说退出登录
+          path('logout/',acc_view.logout),
+          # 动态生成验证码的路由
+          path("image/code/",acc_view.image_code)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
