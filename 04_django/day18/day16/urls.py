@@ -3,7 +3,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from day16 import settings
 from day16app import views
-from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view
+from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view
 
 urlpatterns = [
           # path('admin/', admin.site.urls),
@@ -47,5 +47,16 @@ urlpatterns = [
           # 注销或者说退出登录
           path('logout/',acc_view.logout),
           # 动态生成验证码的路由
-          path("image/code/",acc_view.image_code)
+          path("image/code/",acc_view.image_code),
+
+          # ajax测试任务管理
+          path("task/test/list",task_view.task_test_list),
+          path("task/test/ajax/",task_view.task_test_ajax),
+          # ajax 请求发送表单数据
+          path("task/test/ajax2/",task_view.task_test_ajax2),
+          # 任务管理
+          path("task/list/",task_view.task_list),
+          path("task/ajax/",task_view.task_ajax),
+
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

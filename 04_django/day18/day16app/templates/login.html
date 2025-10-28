@@ -49,8 +49,9 @@
                <label for="id_code">图片验证码</label>
                <div class="row">
                    <div class="col-xs-7">
-                       <input type="text" name="code" class="form-control" placeholder="输入图片验证码" id="id_code" required="">
-                       <span style="color: red;"></span>
+{#                       <input type="text" name="code" class="form-control" placeholder="输入图片验证码" id="id_code" required="">#}
+                       {{ form.code }}
+                       <span style="color: red;">{{ form.code.errors.0 }}</span>
                    </div>
                    <div class="col-xs-5">
                        <img id="image_code" src="/image/code/" alt="">
