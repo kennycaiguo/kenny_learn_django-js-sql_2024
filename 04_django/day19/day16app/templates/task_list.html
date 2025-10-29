@@ -7,7 +7,8 @@
 
 {% block content %}
   <div class="container">
-     <h1>ajax任务</h1>
+     <h4>创建任务</h4>
+     {# 任务表单 #}
      <div class="panel panel-default">
          <div class="panel-heading">任务表单</div>
          <div class="panel-body">
@@ -31,6 +32,49 @@
          </div>
      </div>
   </div>
+    <hr>
+   {# 任务列表   #}
+  <div class="container">
+    <div class="panel panel-default">
+              <!-- Default panel contents -->
+              <div class="panel-heading">
+                  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                  任务列表
+              </div>
+
+             <table class="table table-bordered table-responsive">
+              <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>级别</th>
+                  <th>标题</th>
+                  <th>负责人</th>
+                  <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for t in tasks %}
+              <tr>
+                  <td>{{ t.id }}</td>
+                  <td>{{ t.get_level_display }}</td>
+                  <td>{{ t.title }}</td>
+                  <td>{{ t.user }}</td>
+                  <td>
+{#                      <a href="/dep/edit/?nid={{ dep.id }}" class="btn btn-success btn-xs">编辑</a>#}
+                      <a href="#" class="btn btn-success btn-xs">编辑</a>
+                      <a href="#" class="btn btn-danger btn-xs">删除</a>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+          </div>
+        {#  分页组件      #}
+        <ul class="pagination">
+              {{ page_str }}
+          </ul>
+  </div>
+
 {% endblock %}
 
 {% block js %}
@@ -48,6 +92,8 @@
                       {#console.log(ret)#}
                       if(ret.status){
                           alert("添加任务成功!")
+                          //用js刷新页面,否则新增加的数据不会体现在页面上
+                          location.reload()
                       } else{
                           $.each(ret.errors,function (name, data) {
                               $("#id_"+name).next().text(data[0])

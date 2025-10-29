@@ -14,12 +14,20 @@ from day16app.utils.basemform import BootstrapForm
 
 
 def task_list(req):
-    # if req.method == "GET":
-    #     form = TaskModelForm()
-    #     return render(req, "task_list.html", {"form": form})
-    # return HttpResponse("添加成功")  # 先这么写,后面会修改
+    # 获取所有任务
+    tasks = models.Task.objects.all().order_by("-id")
+    # 分页
+    # 1.实例化分页类的对象
+    page_obj = Pagination(req, tasks, page_size=3)
+    # 2.获取分页数据
+    page_query_set = page_obj.page_queryset
+    # 3.获取分页器的html字符串
+    page_str = page_obj.gen_html()
+    # 用TaskModelForm生成表单对象
     form = TaskModelForm()
-    return render(req, "task_list.html", {"form": form})
+    # 在面板html中渲染数据
+    return render(req, "task_list.html", {"form": form, "tasks": page_query_set, "page_str": page_str})
+
 
 def task_test_list(req):
     return render(req, "task_test_list.html")
@@ -56,9 +64,8 @@ def task_add(req):
     if form.is_valid():
         # 校验成功就保存数据
         form.save()
-        data_dict = {"status":True}
+        data_dict = {"status": True}
         return HttpResponse(json.dumps(data_dict))
     # 验证失败,返回一个包含错误信息的json字符串
-    data_dict = {"status":False,"errors":form.errors}
-    return HttpResponse(json.dumps(data_dict,ensure_ascii=False))
-
+    data_dict = {"status": False, "errors": form.errors}
+    return HttpResponse(json.dumps(data_dict, ensure_ascii=False))
