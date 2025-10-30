@@ -9,6 +9,7 @@ class Admin(models.Model):
     def __str__(self):
         return self.username
 
+
 # Create your models here.
 class Department(models.Model):
     """部门表"""
@@ -41,7 +42,6 @@ class UserInfo(models.Model):
     gender = models.SmallIntegerField(verbose_name="性别", choices=gender_choices, default="选择性别")  # 注意django中性别的处理方式
 
 
-
 # 靓号类
 class PrettyNumber(models.Model):
     """靓号表"""
@@ -68,8 +68,21 @@ class Task(models.Model):
         (2, "重要"),
         (3, "临时"),
     )
-    level = models.SmallIntegerField(verbose_name="级别", choices=level_choices,default=1)
+    level = models.SmallIntegerField(verbose_name="级别", choices=level_choices, default=1)
     title = models.CharField(verbose_name="标题", max_length=64)
     detail = models.TextField(verbose_name="任务详情")
     # 做任务的用户
-    user = models.ForeignKey(verbose_name="负责人",to="Admin",on_delete=models.CASCADE)
+    user = models.ForeignKey(verbose_name="负责人", to="Admin", on_delete=models.CASCADE)
+
+
+# 订单类
+class Order(models.Model):
+    oid = models.CharField(verbose_name="订单号", max_length=64)
+    title = models.CharField(verbose_name="商品名称", max_length=32)
+    price = models.IntegerField(verbose_name="价格")
+    status_choices = (
+        (1, "已付款"),
+        (2, "待付款"),
+    )
+    status = models.SmallIntegerField(verbose_name="订单状态", choices=status_choices,default=2)
+    admin = models.ForeignKey(verbose_name="管理员", to=Admin,on_delete=models.CASCADE)

@@ -188,3 +188,11 @@ class TaskModelForm(BootstrapModelForm):
             "detail":forms.TextInput  #文本框
             # "detail":forms.Textarea  #文本域
         }
+
+
+# 订单修改的ModelForm
+class OrderModelForm(BootstrapModelForm):
+    class Meta:
+        model = models.Order
+        # fields=['title',"price","status","admin"]
+        exclude=["oid"] # 把订单号排除
