@@ -195,4 +195,4 @@ class OrderModelForm(BootstrapModelForm):
     class Meta:
         model = models.Order
         # fields=['title',"price","status","admin"]
-        exclude=["oid"] # 把订单号排除
+        exclude=["oid","admin"] # 把订单号和管理员排除

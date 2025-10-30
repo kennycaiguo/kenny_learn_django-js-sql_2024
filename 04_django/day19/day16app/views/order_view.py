@@ -1,4 +1,6 @@
 import json
+import random
+from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -23,7 +25,16 @@ def order_add(req):
     print(req.POST)
     form = OrderModelForm(data=req.POST)
     if form.is_valid():
+        # 生成oid并且添加到form的数据中
+        oid = datetime.now().strftime("%Y%m%d%H%M%S")+str(random.randint(1000,9999))
+        form.instance.oid = oid
+        # 从session在获取当前登录的管理员的id
+        # admin =req.session.get("info")
+        # # print(req.session.get("info"))
+        # form.instance.admin_id = admin.get("id")
+        form.instance.admin_id = req.session["info"]["id"] # 也可以这么写
         form.save()  # 表单验证(主要是不让数据为空)通过,就保存数据
+
         data_dict = {"status": True}
         return HttpResponse(json.dumps(data_dict))
     data_dict = {"status":False,"errors":form.errors}
