@@ -31,7 +31,7 @@
               </thead>
               <tbody>
               {% for o in orders %}
-              <tr>
+              <tr uid="{{ o.id }}">
                   <td>{{ o.id }}</td>
                   <td>{{ o.oid }}</td>
                   <td>{{ o.title }}</td>
@@ -42,7 +42,7 @@
 {#                      <a href="/dep/edit/?nid={{ dep.id }}" class="btn btn-success btn-xs">编辑</a>#}
                       <a href="#" class="btn btn-success btn-xs">编辑</a>
                        {#     使用ajax方式来删除,需要按钮而不是超链接                 #}
-                      <input type="button"  class="btn btn-danger btn-xs btn-delete" value="删除" />
+                      <input type="button" d_id="{{ o.id }}" class="btn btn-danger btn-xs btn-delete" value="删除" />
                   </td>
               </tr>
               {% endfor %}
@@ -104,11 +104,15 @@
 
 {% block js %}
     <script>
+        //用来保存被删除数据的id的全局变量
+        var del_id;
+
        $(function (){
            $("#btnAdd").click(function () {
                //显示对话框
                {#$("#myModal").modal("toggle")#}
                $("#myModal").modal("show")
+
            })
            //保存数据
            $("#btnSave").click(function () {
@@ -137,10 +141,42 @@
                       }
                   }
               })
-        })
-           //删除功能
+           })
+           //删除功能,先点击列表上面的删除按钮弹出确认对话框
            $(".btn-delete").click(function (){
                $("#delModal").modal("show")
+                //获取需要删除的数据的id,然后赋值给del_id
+               {#del_id = $(".btn-delete").attr("d_id")#}
+               del_id = $(this).attr("d_id")
+           })
+           //这个是对话框的确认按钮,点击后需要发送删除id给后端,然后在后端进行删除
+           $("#btnRemove").click(function () {
+               {#alert("点击了确认按钮")#}
+               //发送Ajax请求把我们上面保存的全局删除id发送给后端
+               $.ajax({
+                   {#url:"/order/"+ del_id +"/del",// /order/8/del的形式也可以,这样子在urls.py中需要order/<int:dis>/del/形式的路由#}
+                   url:"/order/del",// /order/del/?的形式,需要通过data
+                   type:"get",
+                   data:{
+                       did:del_id
+                   },
+                   dataType:"JSON",
+                   success:function (res) {
+                       console.log(res)
+                       //删除成功
+                       if(res.status){
+                            //删除成功,需要把对话框隐藏起来
+                            $("#delModal").modal("hide")
+                            {#//刷新页面,让用户看到效果.#}
+                            location.reload();
+                       } else{
+                           //删除失败
+                           alert(res.errors)
+                           //删除失败,弹出提示框就也需要隐藏对话框
+                           $("#delModal").modal("hide")
+                       }
+                   }
+               })
            })
        })
     </script>

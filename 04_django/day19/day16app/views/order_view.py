@@ -16,21 +16,22 @@ from day16app.utils.basemform import BootstrapForm
 
 
 def order_list(req):
-    #获取所有数据
-    orders = models.Order.objects.all().order_by("-id") # 倒序排列
-    #分页
-    page_obj = Pagination(req, orders,page_size=5)
+    # 获取所有数据
+    orders = models.Order.objects.all().order_by("-id")  # 倒序排列
+    # 分页
+    page_obj = Pagination(req, orders, page_size=5)
     page_query_set = page_obj.page_queryset
     # 分页功能
     page_str = page_obj.gen_html()
     form = OrderModelForm()
     context = {
-        "form":form,
-        "orders":page_query_set,
-        "page_str":page_str
+        "form": form,
+        "orders": page_query_set,
+        "page_str": page_str
     }
-    #渲染数据
+    # 渲染数据
     return render(req, "order_list.html", context)
+
 
 @csrf_exempt
 def order_add(req):
@@ -39,16 +40,31 @@ def order_add(req):
     form = OrderModelForm(data=req.POST)
     if form.is_valid():
         # 生成oid并且添加到form的数据中
-        oid = datetime.now().strftime("%Y%m%d%H%M%S")+str(random.randint(1000,9999))
+        oid = datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))
         form.instance.oid = oid
         # 从session在获取当前登录的管理员的id
         # admin =req.session.get("info")
         # # print(req.session.get("info"))
         # form.instance.admin_id = admin.get("id")
-        form.instance.admin_id = req.session["info"]["id"] # 也可以这么写
+        form.instance.admin_id = req.session["info"]["id"]  # 也可以这么写
         form.save()  # 表单验证(主要是不让数据为空)通过,就保存数据
 
         data_dict = {"status": True}
         return HttpResponse(json.dumps(data_dict))
-    data_dict = {"status":False,"errors":form.errors}
-    return HttpResponse(json.dumps(data_dict)) # 验证失败就返回错误信息
+    data_dict = {"status": False, "errors": form.errors}
+    return HttpResponse(json.dumps(data_dict))  # 验证失败就返回错误信息
+
+
+# 这个是get请求,不需要csrf_token免除,只有post请求才需要
+def order_del(req):
+    # 获取用户传递过来的id
+    did = req.GET.get("did")
+    print(did)
+    # 校验一下需要删除的数据是否在数据库中存在
+    if not models.Order.objects.filter(id=did).exists():
+        data_dict = {"status": False, "errors": "删除失败,没有找到需要删除的数据"}
+        return JsonResponse(data_dict)
+    # 删除数据,
+    models.Order.objects.filter(id=did).delete()
+    data_dict = {"status": True}
+    return JsonResponse(data_dict)
