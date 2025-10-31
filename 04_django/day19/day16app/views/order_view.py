@@ -16,8 +16,21 @@ from day16app.utils.basemform import BootstrapForm
 
 
 def order_list(req):
+    #获取所有数据
+    orders = models.Order.objects.all().order_by("-id") # 倒序排列
+    #分页
+    page_obj = Pagination(req, orders,page_size=5)
+    page_query_set = page_obj.page_queryset
+    # 分页功能
+    page_str = page_obj.gen_html()
     form = OrderModelForm()
-    return render(req, "order_list.html", {"form": form})
+    context = {
+        "form":form,
+        "orders":page_query_set,
+        "page_str":page_str
+    }
+    #渲染数据
+    return render(req, "order_list.html", context)
 
 @csrf_exempt
 def order_add(req):
