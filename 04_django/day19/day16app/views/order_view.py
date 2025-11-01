@@ -68,3 +68,29 @@ def order_del(req):
     models.Order.objects.filter(id=did).delete()
     data_dict = {"status": True}
     return JsonResponse(data_dict)
+
+
+# 处理Ajax根据id进行查询的请求
+def order_detail(req):
+    # #方式1
+    # eId = req.GET.get("eId")
+    # orders = models.Order.objects.filter(id=eId)
+    # # orders = models.Order.objects.filter(id=10000)
+    # if not orders.exists():
+    #     data_dict = {"status": False, "errors": "查询失败,没有数据"}
+    #     return JsonResponse(data_dict)
+    # order = orders.first()
+    # data_dict = {"status": True, "data": {"id":order.id,"oid":order.oid,"title":order.title,"price":order.price,
+    #                                                                          "status":order.status,"admin_id":order.admin.id}}
+    # # data_dict = {"status": True, "data":order}
+    # return HttpResponse(json.dumps(data_dict))
+
+    ## 方式2
+    eId = req.GET.get("eId")
+    order_dict = models.Order.objects.filter(id=eId).values("title", "price", "status").first()
+    if not order_dict:
+        data_dict = {"status": False, "errors": "查询失败,没有数据"}
+        return JsonResponse(data_dict)
+    data_dict = {"status": True, "data": order_dict}
+
+    return JsonResponse(data_dict)

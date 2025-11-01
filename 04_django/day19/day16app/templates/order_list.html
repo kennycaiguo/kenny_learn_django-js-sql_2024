@@ -40,8 +40,8 @@
                   <td>{{ o.admin}}</td>
                   <td>
 {#                      <a href="/dep/edit/?nid={{ dep.id }}" class="btn btn-success btn-xs">编辑</a>#}
-                      <a href="#" class="btn btn-success btn-xs">编辑</a>
-                       {#     使用ajax方式来删除,需要按钮而不是超链接                 #}
+                      {#     使用ajax方式来删除,需要按钮而不是超链接 需要给他添加一个额外的class                #}
+                      <input type="button" e_id="{{ o.id }}" class="btn btn-success btn-xs btn-edit" value="编辑" />
                       <input type="button" d_id="{{ o.id }}" class="btn btn-danger btn-xs btn-delete" value="删除" />
                   </td>
               </tr>
@@ -54,7 +54,7 @@
               {{ page_str }}
           </ul>
     </div>
-    <!-- Modal 新建订单模态对话框-->
+    <!-- Modal 新建订单模态对话框我们也可以用它来做编辑对话框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -109,6 +109,8 @@
 
        $(function (){
            $("#btnAdd").click(function () {
+               //修改对话框的标题,因为编辑订单也需要使用这个对话框
+                $(".modal-title").text("新建订单")
                //显示对话框
                {#$("#myModal").modal("toggle")#}
                $("#myModal").modal("show")
@@ -177,6 +179,39 @@
                        }
                    }
                })
+           })
+
+           //点击编辑按钮(用.btn-edit来找到这个按钮)需要弹出一个编辑对话框
+           $(".btn-edit").click(function () {
+               {#alert("点击了编辑按钮")#}
+
+               //获取需要在后台数据库查询的数据的id
+               var currId = $(this).attr("e_id")
+               //发送Ajax请求去后台获取当前行的相关数据
+               $.ajax({
+                   url:"/order/detail",
+                   type:"get",
+                   data:{
+                       eId:currId
+                   },
+                   dataType:"JSON",
+                   success:function (res) {
+                       if(res.status){
+                           //回显数据到表单
+                           console.log(res.data)
+                           //只有查询到数据才显示对话框
+                           //修改标题
+                           $(".modal-title").text("编辑订单")
+                           //弹出编辑对话框,可以复用新建对话框
+                           $("#myModal").modal("show")
+                       } else {
+                           //获取数据失败.
+                           //显示错误提示
+                           alert(res.errors)
+                       }
+                   }
+               })
+               //然后在对话框的表单中显示数据
            })
        })
     </script>

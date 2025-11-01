@@ -62,6 +62,8 @@ urlpatterns = [
           path("order/list/",order_view.order_list),
           path("order/add/",order_view.order_add),
           path("order/del/",order_view.order_del),
+          # 处理Ajax查询请求
+          path("order/detail/",order_view.order_detail),
 
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
