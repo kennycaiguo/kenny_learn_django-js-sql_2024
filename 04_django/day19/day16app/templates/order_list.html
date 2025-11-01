@@ -106,9 +106,16 @@
     <script>
         //用来保存被删除数据的id的全局变量
         var del_id;
+         //用来保存被修改数据的id的全局变量
+        var edit_id;
 
        $(function (){
            $("#btnAdd").click(function () {
+               $(".error-msg").empty(); //清除上一次的错误信息.
+                //需要将全局变量edit_id置空
+               edit_id = undefined;
+               //因为新建和编辑都用同一个表单,所以在新建的时候应该清空表单数据
+               $("#orderForm")[0].reset() //需要找到表单对应的dom对象然后调用他的reset方法
                //修改对话框的标题,因为编辑订单也需要使用这个对话框
                 $(".modal-title").text("新建订单")
                //显示对话框
@@ -119,8 +126,22 @@
            //保存数据
            $("#btnSave").click(function () {
             {#alert("点击了保存按钮...")#}
-             $(".error-msg").empty(); //清除上一次的错误信息.
-              $.ajax({
+
+             //根据edit_id是否有值来发送不同的请求
+              if(!edit_id){
+                  //新增订单
+                  doAdd()
+             }else{
+               //编辑功能
+                {#doEdit()#}
+                doEdit2()
+            }
+
+           })
+
+           //把发送新增请求的代码封装到一个doAdd()函数中
+           function doAdd() {
+                $.ajax({
                   //发送表单数据到后台
                   url:"/order/add/",
                   type:"post",
@@ -142,8 +163,65 @@
                           })
                       }
                   }
+               })
+           }
+           //把发送编辑请求的代码封装到一个doEdit()函数中
+           function doEdit() {
+               $.ajax({
+                  //发送表单数据到后台
+                  url:"/order/"+edit_id+"/edit/",
+                  type:"post",
+                  data:$("#orderForm").serialize(),
+                  dataType:"JSON",
+                  success:function (ret) {
+                      console.log(ret)
+                      if(ret.status){
+                          alert("修改订单成功!")
+                          //用js刷新页面,否则新增加的数据不会体现在页面上
+                          //添加数据成功后需要清空表单的内容防止重复添加相同的订单
+                          $("#orderForm")[0].reset() //需要找到表单对应的dom对象然后调用他的reset方法
+                          //关闭对话框
+                          $("#myModal").modal("hide")
+                          location.reload()
+                      } else{
+                          $.each(ret.errors,function (name, data) {
+                              $("#id_"+name).next().text(data[0]) //提交失败显示错误信息
+                          })
+                      }
+                  }
               })
-           })
+           }
+           //编辑请求的另外一种写法
+           function doEdit2(){
+                 $.ajax({
+                  //发送表单数据到后台,post方式也可以有查询字符串
+                  url:"/order/edit2/?eId="+edit_id,
+                  type:"post",
+                  data:$("#orderForm").serialize(),
+                  dataType:"JSON",
+                  success:function (ret) {
+                      console.log(ret)
+                      if(ret.status){
+                          alert("修改订单成功!")
+                          //用js刷新页面,否则新增加的数据不会体现在页面上
+                          //添加数据成功后需要清空表单的内容防止重复添加相同的订单
+                          $("#orderForm")[0].reset() //需要找到表单对应的dom对象然后调用他的reset方法
+                          //关闭对话框
+                          $("#myModal").modal("hide")
+                          location.reload()
+                      } else{
+                          if(ret.errorMsg){
+                              alert(ret.errorMsg)
+                          } else {
+                              $.each(ret.errors,function (name, data) {
+                               $("#id_"+name).next().text(data[0]) //提交失败显示错误信息
+                            })
+                          }
+
+                      }
+                  }
+               })
+           }
            //删除功能,先点击列表上面的删除按钮弹出确认对话框
            $(".btn-delete").click(function (){
                $("#delModal").modal("show")
@@ -184,9 +262,11 @@
            //点击编辑按钮(用.btn-edit来找到这个按钮)需要弹出一个编辑对话框
            $(".btn-edit").click(function () {
                {#alert("点击了编辑按钮")#}
-
+               $(".error-msg").empty(); //清除上一次的错误信息.
                //获取需要在后台数据库查询的数据的id
                var currId = $(this).attr("e_id")
+               //把当前行的id赋值给edit_id全局变量,方便上面使用
+               edit_id = currId
                //发送Ajax请求去后台获取当前行的相关数据
                $.ajax({
                    url:"/order/detail",
@@ -198,8 +278,14 @@
                    success:function (res) {
                        if(res.status){
                            //回显数据到表单
-                           console.log(res.data)
+                           {#console.log(res.data.title,res.data.price,res.data.status)#}
                            //只有查询到数据才显示对话框
+                           //先清空一下旧数据,保证获取到最新数据
+                           $("#orderForm")[0].reset() //需要找到表单对应的dom对象然后调用他的reset方法
+                           //先把数据添加到对话框里面的表单的输入框中
+                           $.each(res.data,function (name,value) {
+                               $("#id_"+name).val(value)
+                           })
                            //修改标题
                            $(".modal-title").text("编辑订单")
                            //弹出编辑对话框,可以复用新建对话框
@@ -211,8 +297,9 @@
                        }
                    }
                })
-               //然后在对话框的表单中显示数据
+
            })
+
        })
     </script>
 {% endblock %}

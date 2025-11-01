@@ -94,3 +94,41 @@ def order_detail(req):
     data_dict = {"status": True, "data": order_dict}
 
     return JsonResponse(data_dict)
+
+
+@csrf_exempt
+def order_edit(req, eId):
+    """编辑订单的后台处理函数Ajax提交方式"""
+    print(eId)
+    order = models.Order.objects.filter(id=eId).first()
+    print(order)
+    # print(req.POST)
+    form = OrderModelForm(data=req.POST, instance=order)
+    if form.is_valid():
+        form.save()  # 表单验证(主要是不让数据为空)通过,就保存数据
+
+        data_dict = {"status": True}
+        return HttpResponse(json.dumps(data_dict))
+    data_dict = {"status": False, "errors": form.errors}
+    return HttpResponse(json.dumps(data_dict))  # 验证失败就返回错误信息
+
+
+@csrf_exempt
+def order_edit2(req):
+    """编辑订单的后台处理函数Ajax提交方式"""
+    eId = req.GET.get("eId")
+    print(eId)
+    order = models.Order.objects.filter(id=eId).first()
+    if not order:
+        data_dict={"status":False,"errorMsg":"没有你要找的数据"}
+        return JsonResponse(data_dict)
+    print(order)
+    # print(req.POST)
+    form = OrderModelForm(data=req.POST, instance=order)
+    if form.is_valid():
+        form.save()  # 表单验证(主要是不让数据为空)通过,就保存数据
+
+        data_dict = {"status": True}
+        return HttpResponse(json.dumps(data_dict))
+    data_dict = {"status": False, "errors": form.errors}
+    return HttpResponse(json.dumps(data_dict))  # 验证失败就返回错误信息
