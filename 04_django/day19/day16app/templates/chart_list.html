@@ -1,0 +1,137 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>数据统计</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">折线图</div>
+    <div class="panel-body">
+     折线图
+    </div>
+  </div>
+  <div class="row">
+     <div class="col-sm-8">
+         <div class="panel panel-default">
+            <div class="panel-heading">柱状图</div>
+            <div class="panel-body">
+             <div id="m2" style="width: 600px;height: 400px;"></div>
+            </div>
+         </div>
+     </div>
+     <div class="col-sm-4">
+         <div class="panel panel-default">
+            <div class="panel-heading">饼图</div>
+            <div class="panel-body">
+              <div id="m3" style="width: 100%;height: 400px;"></div>
+            </div>
+         </div>
+     </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/echarts.js' %}"></script>
+    <script>
+
+        //获取需要绘制图表的数据
+       $(function () {
+           initBar();
+           initPie();
+       })
+       function initBar() {
+             //初始化echarts
+       var charts = echarts.init($("#m2")[0])  //jquery对象转化为dom对象: jquery对象[0]
+       console.log(charts)
+       // 指定图表的配置项和数据
+       var option = {
+        title: {
+          text: '员工销售业绩对比',
+          subtext:'云南分公司',
+        },
+        tooltip: {},
+        legend: {
+          data: [],
+          {#top:0#}
+        },
+        xAxis: {
+          data: []
+        },
+        yAxis: {},
+        series: [
+
+        ]
+       };
+       $.ajax({
+           url:"/chart/bar/",
+           type:"get",
+           dataType:"JSON",
+           success:function (res) {
+               //用后台获取的数据来更新option
+               if(res.status){
+                   console.log(res.data)
+                   option.legend.data = res.data.legend
+                   option.series = res.data.series_list
+                   option.xAxis.data = res.data.x_axis
+
+                   // 使用刚指定的配置项和数据显示图表。
+                  charts.setOption(option);
+               }
+
+           }
+       })
+
+     }
+       //初始化饼状图
+       function initPie() {
+            //初始化echarts
+            var charts = echarts.init($("#m3")[0])  //jquery对象转化为dom对象: jquery对象[0]
+            var option;
+
+            option = {
+              title: {
+                text: '部门预算占比',
+                subtext: '云南分公司',
+                left: 'center'
+              },
+              tooltip: {
+                trigger: 'item'
+              },
+              legend: {
+                orient: 'vertical',
+                left: 'left'
+              },
+              series: [
+                {
+                  name: '预算',
+                  type: 'pie',
+                  radius: '50%',
+                  data: [
+                    { value: 1048, name: 'IT部门' },
+                    { value: 735, name: '运营' },
+                    { value: 580, name: '新媒体' },
+                  ],
+                  emphasis: {
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  }
+                }
+              ]
+            };
+
+            option && charts.setOption(option);
+
+       }
+
+
+
+    </script>
+{% endblock %}
