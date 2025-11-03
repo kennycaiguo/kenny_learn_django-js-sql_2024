@@ -3,7 +3,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from day16 import settings
 from day16app import views
-from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view,order_view,chart_view
+from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view,order_view,chart_view,upload_view
 
 urlpatterns = [
           # path('admin/', admin.site.urls),
@@ -71,5 +71,12 @@ urlpatterns = [
           path("chart/list",chart_view.chart_list),
           # 处理柱状图的请求
           path("chart/bar/",chart_view.chart_bar),
+          # 处理饼状图请求
+          path("chart/pie/",chart_view.chart_pie),
+          # 处理这些图请求
+          path("chart/line/",chart_view.chart_line),
+
+          # 文件上传相关路由
+          path("upload/list/",upload_view.upload_list),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
