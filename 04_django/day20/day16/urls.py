@@ -80,5 +80,7 @@ urlpatterns = [
 
           # 文件上传相关路由
           path("upload/list/",upload_view.upload_list),
+          # 路由django的Form组件来实现上传功能
+          path("upload/form/",upload_view.upload_form),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

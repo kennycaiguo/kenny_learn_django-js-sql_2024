@@ -86,3 +86,14 @@ class Order(models.Model):
     )
     status = models.SmallIntegerField(verbose_name="订单状态", choices=status_choices,default=2)
     admin = models.ForeignKey(verbose_name="管理员", to=Admin,on_delete=models.CASCADE)
+
+
+# 头像类
+class Boss(models.Model):
+    name = models.CharField(verbose_name="姓名",max_length=32)
+    age = models.SmallIntegerField(verbose_name="年龄")
+    img = models.CharField(verbose_name="头像",max_length=128)
+
+
+
+
