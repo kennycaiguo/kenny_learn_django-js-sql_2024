@@ -27,6 +27,10 @@ https://www.bilibili.com/video/BV1DE41147b9/?spm_id_from=333.1387.search.video_c
 https://www.bilibili.com/video/BV1YE411s7Ga/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 ### CRM项目实战第三部分：业务开发（完结）
 https://www.bilibili.com/video/BV1eE411s7LT/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### 入门到实战，讲讲公司的微信小程序【django+drf+小程序实战】
+https://www.bilibili.com/video/BV1jC4y1s7QD/?vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### 2024全新 微信小程序全套开发流程
+https://www.bilibili.com/video/BV19h411E7uu/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 
 
 ## 爬虫视频教程
@@ -42,6 +46,8 @@ https://www.bilibili.com/video/BV1zv41137tN/?spm_id_from=333.1387.search.video_c
 ### 2023 爬虫实战 抖音直播间：实时 弹幕/礼物 抓取
 https://www.bilibili.com/video/BV17D4y1j7TT/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 
+### 老师代码仓库
+https://gitee.com/wupeiqi/python_course
 
 
 ## 常用快捷键
