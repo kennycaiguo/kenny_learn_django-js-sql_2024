@@ -21,6 +21,12 @@ https://www.bilibili.com/video/BV1aM4y137Qu/?spm_id_from=333.1387.search.video_c
 https://www.bilibili.com/video/BV1uA411b77M/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 ### drf实战和源码剖析（django rest framework）
 https://www.bilibili.com/video/BV1w94y1W7Sx/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### CRM项目实战第一部分：rbac权限组件
+https://www.bilibili.com/video/BV1DE41147b9/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### CRM项目实战第二部分：stark组件
+https://www.bilibili.com/video/BV1YE411s7Ga/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### CRM项目实战第三部分：业务开发（完结）
+https://www.bilibili.com/video/BV1eE411s7LT/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 
 
 ## 爬虫视频教程
