@@ -1,5 +1,6 @@
-# kenny_learn_django-vue-sql_2025
-学习django和js+sql项目开发
+# kenny_learn_django-js-sql_2024
+学习django和js+sql项目开发,这里是源码,学习笔记链接如下:
+https://github.com/kennycaiguo/kenny_learn_django-js-sql_2024_study_notes
 
 这里我们使用typora来做笔记,所以有必要了解一下markdwon的语法和typora快捷键
 ## 一些django项目源码
