@@ -1,12 +1,16 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls.static import static
+from django.views.static import serve
+
 from day16 import settings
 from day16app import views
 from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view,order_view,chart_view,upload_view
 
 urlpatterns = [
           # path('admin/', admin.site.urls),
+          # 注意:这个serve函数,在很多包里面都有,这里需要django.views.static.serve
+          re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT},name='media'),
           path('', home_view.home),
           path('index/', home_view.index),
           # 部门管理相关路由

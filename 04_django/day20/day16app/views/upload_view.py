@@ -1,17 +1,12 @@
 import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from day16app import models  # 导入models因为以后可能里面会有很多类不能一个一个导入
-from day16app.utils.encrypt import md5
-from day16app.utils.pagination import Pagination
-from day16app.utils.day16forms import TaskModelForm
-from day16app.utils.code import check_code
-from io import BytesIO
 from django import forms
 from day16app.utils.basemform import BootstrapForm
 import os
+
+
 
 def upload_list(req):
     if req.method == "GET":
@@ -45,16 +40,18 @@ def upload_form(req):
         print(form.cleaned_data)
         # 上传成功需要保存数据,因为是用Form来实现,我们需要手动保存数据
         # 不能够把一个文件对象直接保存到数据库中,需要先保存这个文件对象的内容到一个文件,然后把这个文件的路径保存到数据库中
-        # 1.先把图片文件保存下来,然后获取这个文件的路径,比较简单的办法就是把它保存到static/img/中
+        # 1.先把图片文件保存下来,然后获取这个文件的路径,比较简单的办法就是把它保存到static/img/中,实际开发中一般保存在media文件夹里面(需要配置)
         img_obj = form.cleaned_data.get("img")
-        img_path = os.path.join("day16app","static","img",img_obj.name)
-        f = open(img_path,"wb")
+        db_file_path = os.path.join("media", img_obj.name)
+        # 使用了media文件夹后,可以使得实际路径和数据库路径一样.
+        img_path = db_file_path
+        f = open(img_path, "wb")
         for chunk in img_obj.chunks():
             f.write(chunk)
         f.close()
         # 2.然后把这个文件的路径和姓名和年龄的数据保存到数据库中
         name = form.cleaned_data.get("name")
         age = form.cleaned_data.get("age")
-        models.Boss.objects.create(name=name,age=age,img=img_path)
+        models.Boss.objects.create(name=name, age=age, img=db_file_path)
         return HttpResponse("上传成功")
     return render(req, "upload_form.html", {"form": form, "title": "利用django的Form组件实现文件上传"})  # 表单数据校验失败就会显示错误
