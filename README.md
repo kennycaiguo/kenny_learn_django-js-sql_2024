@@ -15,6 +15,13 @@ https://www.bilibili.com/video/BV1JE411V7xk/?spm_id_from=333.1387.upload.video_c
 https://www.bilibili.com/video/BV1ZE411j7RK/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 ### 15天django入门到放弃
 https://www.bilibili.com/video/BV1zE411x7LG/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### django channels实战（轮训、长轮训、websocket、聊天室、工单）
+https://www.bilibili.com/video/BV1aM4y137Qu/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### 老男孩django项目实战：轻量级bug管理平台（自学必备，学完就出师）
+https://www.bilibili.com/video/BV1uA411b77M/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### drf实战和源码剖析（django rest framework）
+https://www.bilibili.com/video/BV1w94y1W7Sx/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+
 
 ## 爬虫视频教程
 ### 10天快速学会【爬虫】 +【 数据分析】实战
