@@ -5,7 +5,7 @@ from django.views.static import serve
 
 from day16 import settings
 from day16app import views
-from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view,order_view,chart_view,upload_view
+from day16app.views import dep_view,user_view,pretty_view,home_view,admin_view,acc_view,task_view,order_view,chart_view,upload_view,city_view
 
 urlpatterns = [
           # path('admin/', admin.site.urls),
@@ -82,9 +82,16 @@ urlpatterns = [
           # 处理这些图请求
           path("chart/line/",chart_view.chart_line),
 
-          # 文件上传相关路由
+          # 文件上传相关路由,改为用ModelForm上传
           path("upload/list/",upload_view.upload_list),
           # 路由django的Form组件来实现上传功能
           path("upload/form/",upload_view.upload_form),
+          # 使用ModelForm上传的便捷方式
+          path("upload/modelform/",upload_view.upload_model_form),
+
+          # 城市列表
+          path("city/list/",city_view.city_list),
+          # 新增城市
+          path("city/add/",city_view.city_add),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

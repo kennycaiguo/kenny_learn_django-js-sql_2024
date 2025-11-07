@@ -84,16 +84,20 @@ class Order(models.Model):
         (1, "已付款"),
         (2, "待付款"),
     )
-    status = models.SmallIntegerField(verbose_name="订单状态", choices=status_choices,default=2)
-    admin = models.ForeignKey(verbose_name="管理员", to=Admin,on_delete=models.CASCADE)
+    status = models.SmallIntegerField(verbose_name="订单状态", choices=status_choices, default=2)
+    admin = models.ForeignKey(verbose_name="管理员", to=Admin, on_delete=models.CASCADE)
 
 
-# 头像类
+# 头像类,和form或者ModelForm配合使用
 class Boss(models.Model):
-    name = models.CharField(verbose_name="姓名",max_length=32)
+    name = models.CharField(verbose_name="姓名", max_length=32)
     age = models.SmallIntegerField(verbose_name="年龄")
-    img = models.CharField(verbose_name="头像",max_length=128)
+    img = models.CharField(verbose_name="头像", max_length=128)
 
 
-
-
+# 城市类,和ModelForm配合使用
+class City(models.Model):
+    name = models.CharField(verbose_name="城市名称", max_length=32)
+    count = models.IntegerField(verbose_name="人口")
+    # 图片使用文件上传控件,设置好上传路径(在media文件夹里面的子目录),django会帮我们保存,不用我们手动保存
+    img = models.FileField(verbose_name="Logo", max_length=128,upload_to="city/")

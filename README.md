@@ -7,6 +7,27 @@
 https://github.com/kele59/imooc-django  <br>
 2.基于 Flask 框架开发的微信小程序后端项目，用于构建小程序商城后台 （电商相关)
 https://github.com/Allen7D/mini-shop-server
+## 老师的另外一些教育视频
+https://space.bilibili.com/283478842/upload/video
+### django的比较好的视频1
+https://www.bilibili.com/video/BV1JE411V7xk/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### 4天搞定django rest framework源码和实战
+https://www.bilibili.com/video/BV1ZE411j7RK/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+### 15天django入门到放弃
+https://www.bilibili.com/video/BV1zE411x7LG/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+
+## 爬虫视频教程
+### 10天快速学会【爬虫】 +【 数据分析】实战
+https://www.bilibili.com/video/BV1tE411F7do/?spm_id_from=333.1387.upload.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+
+### 爬虫&逆向全套教程（兼职赚外快）
+https://www.bilibili.com/video/BV1LF411B7Qo/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+
+### 爬虫进阶：今日头条 signature算法 学习
+https://www.bilibili.com/video/BV1zv41137tN/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
+
+### 2023 爬虫实战 抖音直播间：实时 弹幕/礼物 抓取
+https://www.bilibili.com/video/BV17D4y1j7TT/?spm_id_from=333.1387.search.video_card.click&vd_source=77c27fc74aec7a1c6789f9d7680904aa
 
 
 
