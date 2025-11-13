@@ -1,3 +1,4 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q41MTGJW) <br>
 # kenny_learn_django-js-sql_2024
 学习django和js+sql项目开发,这里是源码,学习笔记链接如下:
 https://github.com/kennycaiguo/kenny_learn_django-js-sql_2024_study_notes
