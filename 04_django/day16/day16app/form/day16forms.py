@@ -15,6 +15,11 @@ from day16app.models import UserInfo, Department
 class UserInfoForm(BootstrapModelForm):
     """添加用户和编辑用户信息需要使用的类"""
     name = forms.CharField(min_length=2, label="姓名")  # 设置姓名的最小长度
+     # 对密码一栏使用密码框
+    password = forms.CharField(
+            label="密码",
+            widget=forms.PasswordInput
+    )
     create_time = forms.CharField(
         min_length=10, label="入职时间",
         widget=forms.TextInput(attrs={"autocomplete": "off"})
