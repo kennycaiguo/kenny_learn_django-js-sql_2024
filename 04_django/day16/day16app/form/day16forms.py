@@ -18,7 +18,7 @@ class UserInfoForm(BootstrapModelForm):
      # 对密码一栏使用密码框
     password = forms.CharField(
             label="密码",
-            widget=forms.PasswordInput
+            widget=forms.PasswordInput(render_value=True)
     )
     create_time = forms.CharField(
         min_length=10, label="入职时间",
